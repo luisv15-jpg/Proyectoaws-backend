@@ -1,0 +1,44 @@
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+
+@Injectable()
+export class DrizzleService implements OnModuleInit, OnModuleDestroy {
+  private pool!: Pool;
+  private db!: NodePgDatabase;
+  private initializationPromise: Promise<void>;
+
+  constructor() {
+    // Inicia la conexión inmediatamente pero de forma controlada
+    this.initializationPromise = this.initialize();
+  }
+
+  private async initialize() {
+    console.log('Conectando a la base de datos...');
+
+    this.pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      max: 30,
+      idleTimeoutMillis: 60000,
+      connectionTimeoutMillis: 5000,
+    });
+
+    this.db = drizzle({ client: this.pool });
+    console.log('Base de datos conectada exitosamente');
+  }
+
+  async onModuleInit() {
+    await this.initializationPromise;
+  }
+
+  getDb(): NodePgDatabase {
+    if (!this.db) {
+      throw new Error('Database no inicializada');
+    }
+    return this.db;
+  }
+
+  async onModuleDestroy() {
+    await this.pool.end();
+  }
+}
