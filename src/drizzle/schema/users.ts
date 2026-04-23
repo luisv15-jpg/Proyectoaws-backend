@@ -8,6 +8,7 @@ export const users = pgTable('users', {
     password: varchar('password', { length: 255 }).notNull(),
     role: roleEnum('role').default('user').notNull(),
     dni: varchar('dni', { length: 8 }),
+    avatar: varchar('avatar', { length: 255 }),
     telefono: varchar('telefono', { length: 15 }),
     direccion: varchar('direccion', { length: 255 }),
     altura_cm: integer('altura_cm'),  

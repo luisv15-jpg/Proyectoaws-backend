@@ -28,6 +28,11 @@ export class UpdateUserDto {
   telefono?: string;
 
   @IsOptional()
+  @IsString({ message: 'La URL del avatar debe ser texto' })
+  @MaxLength(255, { message: 'La URL del avatar no puede exceder los 255 caracteres' })
+  avatar?: string;
+
+  @IsOptional()
   @IsString({ message: 'La dirección debe ser texto' })
   @MaxLength(255, { message: 'La dirección no puede exceder los 255 caracteres' })
   direccion?: string;

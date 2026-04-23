@@ -44,6 +44,13 @@ export class ProductsController {
     return this.productsService.findAllAdmin(filterDto);
   }
 
+  @Get('admin/deleted')  // ← AGREGAR ESTE ENDPOINT
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
+  async findDeleted() {
+    return this.productsService.findDeleted();
+  }
+
   @Post()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('admin')

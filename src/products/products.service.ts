@@ -43,21 +43,38 @@ export class ProductsService extends BaseDrizzleService {
     return { message: 'Producto creado exitosamente', product: newProduct[0] };
   }
 
+  async findDeleted() {
+    const deletedProducts = await this.db
+      .select({
+        id: schema.products.id,
+        nombre: schema.products.nombre,
+        precio: schema.products.precio,
+        stock: schema.products.stock,
+        categoria: schema.products.categoria,
+        deletedAt: schema.products.deletedAt,
+      })
+      .from(schema.products)
+      .where(isNotNull(schema.products.deletedAt))
+      .orderBy(desc(schema.products.deletedAt));
+
+    return deletedProducts;
+  }
+
   async findAll(filterDto: FilterProductDto) {
-    const { 
-      categoria, 
-      subcategoria, 
-      talla, 
-      color, 
-      precioMin, 
-      precioMax, 
-      search, 
-      page = 1, 
-      limit = 10, 
-      sortBy = 'createdAt', 
-      sortOrder = 'DESC' 
+    const {
+      categoria,
+      subcategoria,
+      talla,
+      color,
+      precioMin,
+      precioMax,
+      search,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC'
     } = filterDto;
-    
+
     const offset = (page - 1) * limit;
 
     const conditions: any[] = [];
@@ -97,7 +114,7 @@ export class ProductsService extends BaseDrizzleService {
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     const orderByColumn = schema.products[sortBy as keyof typeof schema.products];
-    
+
     const products = await this.db
       .select()
       .from(schema.products)
@@ -121,16 +138,16 @@ export class ProductsService extends BaseDrizzleService {
   }
 
   async findAllAdmin(filterDto: FilterProductDto) {
-    const { 
-      categoria, 
-      subcategoria, 
-      search, 
-      page = 1, 
-      limit = 10, 
-      sortBy = 'createdAt', 
-      sortOrder = 'DESC' 
+    const {
+      categoria,
+      subcategoria,
+      search,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC'
     } = filterDto;
-    
+
     const offset = (page - 1) * limit;
 
     const conditions: any[] = [];
@@ -152,7 +169,7 @@ export class ProductsService extends BaseDrizzleService {
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     const orderByColumn = schema.products[sortBy as keyof typeof schema.products];
-    
+
     const products = await this.db
       .select()
       .from(schema.products)

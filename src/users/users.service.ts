@@ -20,6 +20,7 @@ export class UsersService extends BaseDrizzleService {
         email: schema.users.email,
         role: schema.users.role,
         dni: schema.users.dni,
+        avatar: schema.users.avatar,
         telefono: schema.users.telefono,
         direccion: schema.users.direccion,
         altura_cm: schema.users.altura_cm,
@@ -43,6 +44,7 @@ export class UsersService extends BaseDrizzleService {
         role: schema.users.role,
         dni: schema.users.dni,
         telefono: schema.users.telefono,
+        avatar: schema.users.avatar,
         direccion: schema.users.direccion,
         altura_cm: schema.users.altura_cm,
         peso_kg: schema.users.peso_kg,
@@ -65,6 +67,7 @@ export class UsersService extends BaseDrizzleService {
         dni: schema.users.dni,
         telefono: schema.users.telefono,
         direccion: schema.users.direccion,
+        avatar: schema.users.avatar,
         deletedAt: schema.users.deletedAt,
       })
       .from(schema.users)
@@ -83,6 +86,7 @@ export class UsersService extends BaseDrizzleService {
         dni: schema.users.dni,
         telefono: schema.users.telefono,
         direccion: schema.users.direccion,
+        avatar: schema.users.avatar,
         altura_cm: schema.users.altura_cm,
         peso_kg: schema.users.peso_kg,
         deletedAt: schema.users.deletedAt,

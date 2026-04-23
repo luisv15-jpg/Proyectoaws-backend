@@ -19,6 +19,7 @@ CREATE TABLE "users" (
 	"password" varchar(255) NOT NULL,
 	"role" "role" DEFAULT 'user' NOT NULL,
 	"dni" varchar(8),
+	"avatar" varchar(255),
 	"telefono" varchar(15),
 	"direccion" varchar(255),
 	"altura_cm" integer,
@@ -45,6 +46,7 @@ CREATE TABLE "products" (
 	"vendidos" integer DEFAULT 0,
 	"activo" boolean DEFAULT true,
 	"created_at" timestamp DEFAULT now() NOT NULL,
+	"deleted_at" timestamp,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint

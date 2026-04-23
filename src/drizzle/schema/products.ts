@@ -16,5 +16,6 @@ export const products = pgTable('products', {
   vendidos: integer('vendidos').default(0),
   activo: boolean('activo').default(true),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  deletedAt: timestamp('deleted_at'),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

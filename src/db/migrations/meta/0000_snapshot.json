@@ -1,5 +1,5 @@
 {
-  "id": "d30f41d8-2b53-4b39-83e7-e89425200f98",
+  "id": "22601e15-f8c4-46e5-910b-1d38f66f2512",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -136,6 +136,12 @@
         "dni": {
           "name": "dni",
           "type": "varchar(8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false
         },
@@ -298,6 +304,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
