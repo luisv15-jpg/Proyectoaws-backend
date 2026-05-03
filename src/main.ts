@@ -5,8 +5,7 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  
+    
   const config = new DocumentBuilder()
   .setTitle('PROYECTO AWS - BACKEND')
   .setDescription('APIs para la tienda de Ropa')
@@ -34,11 +33,11 @@ async function bootstrap() {
   }));
   
   app.enableCors({
-    origin: [process.env.FRONTEND_URL],
+    origin: [process.env.FRONTEND_URL || 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
-  await app.listen(process.env.PORT ?? 3002);
+  await app.listen(process.env.PORT ?? 3002, '0.0.0.0');
 }
 bootstrap();

@@ -9,6 +9,8 @@ import { AiModule } from './ai/ai.module';
 import { MailModule } from './mail/mail.module';
 import { DrizzleModule } from './drizzle/drizzle.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { HealthModule } from './health/health.module';
+import { SetupModule } from './scripts/setup.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     CartModule, 
     OrdersModule,
     DashboardModule,
+    HealthModule,
+    SetupModule,
     AiModule],
 })
 export class AppModule {}

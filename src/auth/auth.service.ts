@@ -59,6 +59,10 @@ export class AuthService extends BaseDrizzleService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    if (user[0].deletedAt !== null) {
+      throw new UnauthorizedException('Tu cuenta ha sido eliminada. Contacta al administrador.');
+    }
+
     const isPasswordValid = await bcrypt.compare(loginDto.password, user[0].password);
 
     if (!isPasswordValid) {
@@ -235,12 +239,14 @@ export class AuthService extends BaseDrizzleService {
         nombre: schema.users.nombre,
         email: schema.users.email,
         role: schema.users.role,
+        deletedAt: schema.users.deletedAt,
       })
       .from(schema.users)
       .where(eq(schema.users.id, userId))
       .limit(1);
 
     if (user.length === 0) return null;
+    if (user[0].deletedAt !== null) return null;
     return user[0];
   }
 }

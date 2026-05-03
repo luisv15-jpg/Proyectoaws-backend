@@ -237,6 +237,7 @@ export class ProductsService extends BaseDrizzleService {
       .update(schema.products)
       .set({
         activo: false,
+        deletedAt: new Date(),
         updatedAt: new Date(),
       })
       .where(eq(schema.products.id, id))
@@ -260,6 +261,7 @@ export class ProductsService extends BaseDrizzleService {
       .update(schema.products)
       .set({
         activo: true,
+        deletedAt: null,
         updatedAt: new Date(),
       })
       .where(eq(schema.products.id, id))
