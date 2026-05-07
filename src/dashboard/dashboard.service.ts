@@ -12,36 +12,30 @@ export class DashboardService extends BaseDrizzleService {
 
   async getOverview() {
     try {
-      // Total de usuarios activos
       const totalUsers = await this.db
         .select({ count: sql<number>`count(*)` })
         .from(schema.users)
         .where(isNull(schema.users.deletedAt));
 
-      // Total de productos activos
       const totalProducts = await this.db
         .select({ count: sql<number>`count(*)` })
         .from(schema.products)
         .where(eq(schema.products.activo, true));
 
-      // Total de pedidos
       const totalOrders = await this.db
         .select({ count: sql<number>`count(*)` })
         .from(schema.orders);
 
-      // Ventas totales (solo pedidos entregados)
       const totalSales = await this.db
         .select({ sum: sql<string>`sum(${schema.orders.total})` })
         .from(schema.orders)
         .where(eq(schema.orders.estado, 'delivered'));
 
-      // Pedidos pendientes
       const pendingOrders = await this.db
         .select({ count: sql<number>`count(*)` })
         .from(schema.orders)
         .where(eq(schema.orders.estado, 'pending'));
 
-      // Pedidos en proceso
       const processingOrders = await this.db
         .select({ count: sql<number>`count(*)` })
         .from(schema.orders)

@@ -9,10 +9,6 @@ import { CreateProductDto, UpdateProductDto, FilterProductDto } from './dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  // ============================================
-  // RUTAS PÚBLICAS (cualquiera puede ver)
-  // ============================================
-
   @Get()
   async findAll(@Query() filterDto: FilterProductDto) {
     return this.productsService.findAll(filterDto);
@@ -32,10 +28,6 @@ export class ProductsController {
   async findOne(@Param('id') id: string) {
     return this.productsService.findOne(id);
   }
-
-  // ============================================
-  // RUTAS DE ADMIN (requieren token + rol admin)
-  // ============================================
 
   @Get('admin/all')
   @UseGuards(AuthGuard('jwt'), RolesGuard)

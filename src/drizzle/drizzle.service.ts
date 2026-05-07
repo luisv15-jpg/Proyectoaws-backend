@@ -16,12 +16,10 @@ export class DrizzleService implements OnApplicationShutdown {
   }
 
   private async generateToken(): Promise<string> {
-    // Si estamos en desarrollo local, usar contraseña normal
     if (process.env.NODE_ENV !== 'production') {
       return process.env.DB_PASSWORD || '';
     }
 
-    // En producción, usar IAM token
     const signer = new Signer({
       region: process.env.AWS_REGION || 'us-east-1',
       hostname: process.env.DB_HOST!,
@@ -58,7 +56,6 @@ export class DrizzleService implements OnApplicationShutdown {
 
       this.db = drizzle(this.pool, { schema });
 
-      // Probar conexión
       const result = await this.pool.query('SELECT NOW()');
       this.logger.log(`✅ Conexión a RDS establecida - ${result.rows[0].now}`);
 

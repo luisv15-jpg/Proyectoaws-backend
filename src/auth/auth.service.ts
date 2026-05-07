@@ -74,7 +74,6 @@ export class AuthService extends BaseDrizzleService {
     const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
     const refreshToken = this.jwtService.sign({ sub: user[0].id }, { expiresIn: '7d' });
 
-    // Guardar refresh token
     await this.db.insert(schema.sessions).values({
       userId: user[0].id,
       refreshToken: refreshToken,
@@ -89,7 +88,7 @@ export class AuthService extends BaseDrizzleService {
         nombre: user[0].nombre,
         email: user[0].email,
         role: user[0].role,
-        avatar: user[0].avatar,  // ← AGREGAR avatar
+        avatar: user[0].avatar,  
       },
     };
   }

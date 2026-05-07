@@ -27,7 +27,6 @@ export class OrdersService extends BaseDrizzleService {
     let total = 0;
     const orderItemsData: any[] = [];
 
-    // Validar stock y calcular total
     for (const item of items) {
       const product = await this.productsService.findOne(item.productId);
 
@@ -58,7 +57,6 @@ export class OrdersService extends BaseDrizzleService {
       });
     }
 
-    // Crear el pedido
     const newOrder = await this.db
       .insert(schema.orders)
       .values({
@@ -72,7 +70,6 @@ export class OrdersService extends BaseDrizzleService {
 
     const order = newOrder[0];
 
-    // Crear los items del pedido
     for (const itemData of orderItemsData) {
       await this.db.insert(schema.orderItems).values({
         orderId: order.id,
@@ -87,7 +84,6 @@ export class OrdersService extends BaseDrizzleService {
       });
     }
 
-    // Actualizar stock de productos
     for (const item of items) {
       const product = await this.productsService.findOne(item.productId);
       await this.db
@@ -100,10 +96,8 @@ export class OrdersService extends BaseDrizzleService {
         .where(eq(schema.products.id, item.productId));
     }
 
-    // Limpiar el carrito del usuario
     await this.cartService.clearCart(userId);
 
-    // Obtener el pedido completo con sus items
     const orderWithItems = await this.getOrderById(order.id);
 
     return {
@@ -154,7 +148,6 @@ export class OrdersService extends BaseDrizzleService {
       .limit(limit)
       .offset(offset);
 
-    // Obtener items para cada pedido
     const ordersWithItems = await Promise.all(
       orders.map(async (order) => {
         const items = await this.db
@@ -199,7 +192,6 @@ export class OrdersService extends BaseDrizzleService {
       .limit(limit)
       .offset(offset);
 
-    // Obtener items y datos de usuario para cada pedido
     const ordersWithDetails = await Promise.all(
       orders.map(async (order) => {
         const items = await this.db

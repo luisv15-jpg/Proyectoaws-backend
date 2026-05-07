@@ -9,10 +9,6 @@ import { CreateOrderDto, UpdateOrderStatusDto, FilterOrderDto } from './dto';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  // ============================================
-  // RUTAS DE USUARIO
-  // ============================================
-
   @Post()
   @UseGuards(AuthGuard('jwt'))
   async createOrder(@Request() req, @Body() createOrderDto: CreateOrderDto) {
@@ -30,10 +26,6 @@ export class OrdersController {
   async getOrderById(@Param('id') id: string) {
     return this.ordersService.getOrderById(id);
   }
-
-  // ============================================
-  // RUTAS DE ADMIN
-  // ============================================
 
   @Get()
   @UseGuards(AuthGuard('jwt'), RolesGuard)

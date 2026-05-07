@@ -10,15 +10,12 @@ export class AiService {
   ) {}
 
   async getPersonalizedRecommendations(userId: string, limit: number = 10) {
-    // Obtener IDs recomendados por AWS Personalize
     const recommendedIds = await this.personalizeService.getRecommendations(userId, limit);
     
     if (recommendedIds.length === 0) {
-      // Fallback: productos más vendidos
       return this.getFallbackRecommendations(limit);
     }
 
-    // Obtener detalles completos de los productos
     const products = await Promise.all(
       recommendedIds.map(async (id) => {
         try {
@@ -33,15 +30,12 @@ export class AiService {
   }
 
   async getSimilarProducts(productId: string, limit: number = 10) {
-    // Obtener productos similares de AWS Personalize
     const similarIds = await this.personalizeService.getSimilarItems(productId, limit);
     
     if (similarIds.length === 0) {
-      // Fallback: productos de la misma categoría
       return this.getCategoryFallback(productId, limit);
     }
 
-    // Obtener detalles completos
     const products = await Promise.all(
       similarIds.map(async (id) => {
         try {
@@ -56,7 +50,6 @@ export class AiService {
   }
 
   async getFallbackRecommendations(limit: number = 10) {
-    // Productos más vendidos como fallback
     const products = await this.productsService.findAll({
       page: 1,
       limit,

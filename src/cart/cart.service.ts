@@ -36,7 +36,6 @@ export class CartService extends BaseDrizzleService {
       .innerJoin(schema.products, eq(schema.cartItems.productId, schema.products.id))
       .where(eq(schema.cartItems.userId, userId));
 
-    // Calcular totales
     let subtotal = 0;
     let total = 0;
 
@@ -66,29 +65,24 @@ export class CartService extends BaseDrizzleService {
   }
 
   async addToCart(userId: string, dto: AddToCartDto) {
-    // Verificar que el producto existe
     const product = await this.productsService.findOne(dto.productId);
 
     if (!product.activo) {
       throw new BadRequestException('El producto no está disponible');
     }
 
-    // Verificar stock
     if (product.stock < dto.cantidad) {
       throw new BadRequestException(`Stock insuficiente. Solo quedan ${product.stock} unidades`);
     }
 
-    // Verificar si la talla está disponible
     if (product.tallas && !product.tallas.includes(dto.talla)) {
       throw new BadRequestException(`La talla ${dto.talla} no está disponible para este producto`);
     }
 
-    // Verificar si el color está disponible
     if (product.colores && !product.colores.includes(dto.color)) {
       throw new BadRequestException(`El color ${dto.color} no está disponible para este producto`);
     }
 
-    // Buscar si el item ya existe en el carrito
     const existingItem = await this.db
       .select()
       .from(schema.cartItems)
@@ -105,7 +99,7 @@ export class CartService extends BaseDrizzleService {
     let cartItem;
 
     if (existingItem.length > 0) {
-      // Actualizar cantidad
+
       const nuevaCantidad = existingItem[0].cantidad + dto.cantidad;
       
       if (product.stock < nuevaCantidad) {
@@ -123,7 +117,6 @@ export class CartService extends BaseDrizzleService {
 
       cartItem = updated[0];
     } else {
-      // Crear nuevo item
       const newItem = await this.db
         .insert(schema.cartItems)
         .values({
@@ -145,7 +138,6 @@ export class CartService extends BaseDrizzleService {
   }
 
   async updateCartItem(userId: string, dto: UpdateCartItemDto) {
-    // Verificar que el item existe y pertenece al usuario
     const cartItem = await this.db
       .select()
       .from(schema.cartItems)
@@ -161,7 +153,6 @@ export class CartService extends BaseDrizzleService {
       throw new NotFoundException('Item no encontrado en el carrito');
     }
 
-    // Verificar stock del producto
     const product = await this.productsService.findOne(cartItem[0].productId);
 
     if (product.stock < dto.cantidad) {
