@@ -12,6 +12,7 @@ Frontend: [Proyectoaws-frontend](https://github.com/luisv15-jpg/Proyectoaws-fron
 - **Usuarios:** perfil con medidas corporales, gestión de roles y restauración de usuarios eliminados.
 - **Dashboard:** ventas por mes y por día, productos más vendidos, distribución por categoría y por estado de pedido.
 - **Recomendaciones con IA:** productos recomendados y similares con Amazon Personalize. Si el servicio no devuelve resultados, recomienda los más vendidos.
+- **Imágenes:** el backend genera URLs firmadas para que el navegador suba las imágenes directo a Amazon S3 (máximo 2 MB), sin exponer credenciales.
 - **Documentación:** Swagger disponible en `/docs`.
 
 ## Stack
@@ -39,6 +40,14 @@ pnpm start:dev
 
 La API queda en `http://localhost:3002` y la documentación en `http://localhost:3002/docs`.
 
+Como alternativa a las migraciones, puedes crear las tablas y el usuario administrador con el endpoint de setup. Solo funciona si `SETUP_KEY` está definida:
+
+```bash
+curl -X POST http://localhost:3002/setup/create-tables -H "x-setup-key: TU_SETUP_KEY"
+```
+
+Después de usarlo, borra `SETUP_KEY` para dejarlo deshabilitado.
+
 ### Con Docker
 
 ```bash
@@ -59,6 +68,8 @@ Revisa `.env.example`. Las principales son:
 | `GMAIL_USER`, `GMAIL_APP_PASSWORD` | Envío de correos de recuperación |
 | `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | Acceso a AWS |
 | `PERSONALIZE_CAMPAIGN_ARN`, `PERSONALIZE_TRACKING_ID` | Recomendaciones con Amazon Personalize |
+| `S3_BUCKET_NAME` | Bucket donde se guardan las imágenes |
+| `SETUP_KEY`, `SETUP_ADMIN_EMAIL`, `SETUP_ADMIN_PASSWORD` | Setup inicial de la base de datos (opcional) |
 
 ## Estructura
 
@@ -71,6 +82,7 @@ src/
   orders/      pedidos y estados
   dashboard/   métricas para el panel de administración
   ai/          recomendaciones con Amazon Personalize
+  uploads/     URLs firmadas para subir imágenes a S3
   mail/        envío de correos
   drizzle/     conexión y esquema de la base de datos
   health/      endpoint de salud para el despliegue
