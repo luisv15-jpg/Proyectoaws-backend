@@ -11,6 +11,7 @@ import { DrizzleModule } from './drizzle/drizzle.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { HealthModule } from './health/health.module';
 import { SetupModule } from './scripts/setup.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -20,14 +21,16 @@ import { SetupModule } from './scripts/setup.module';
     }),
     DrizzleModule,
     AuthModule,
-    MailModule, 
-    UsersModule, 
-    ProductsModule, 
-    CartModule, 
+    MailModule,
+    UsersModule,
+    ProductsModule,
+    CartModule,
     OrdersModule,
     DashboardModule,
     HealthModule,
     SetupModule,
-    AiModule],
+    UploadsModule,
+    AiModule,
+  ],
 })
 export class AppModule {}

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { sql } from 'drizzle-orm';
 import { DrizzleService } from '../drizzle/drizzle.service';
 import * as bcrypt from 'bcrypt';
 
@@ -6,12 +7,16 @@ import * as bcrypt from 'bcrypt';
 export class SetupService {
   constructor(private drizzleService: DrizzleService) {}
 
-  async createTables() {
+  async createTables(adminEmail: string, adminPlainPassword: string) {
     const db = await this.drizzleService.getDb();
 
     await db.execute(`CREATE TYPE "role" AS ENUM('admin', 'user');`);
-    await db.execute(`CREATE TYPE "order_status" AS ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled');`);
-    await db.execute(`CREATE TYPE "payment_method" AS ENUM('tarjeta', 'yape', 'plin', 'transferencia');`);
+    await db.execute(
+      `CREATE TYPE "order_status" AS ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled');`,
+    );
+    await db.execute(
+      `CREATE TYPE "payment_method" AS ENUM('tarjeta', 'yape', 'plin', 'transferencia');`,
+    );
 
     await db.execute(`
       CREATE TABLE users (
@@ -126,20 +131,18 @@ export class SetupService {
       );
     `);
 
-    const adminPassword = await bcrypt.hash('Admin123!', 10);
-    
-    await db.execute(`
-      INSERT INTO users (nombre, email, password, role) 
-      VALUES ('Administrador', 'admin@tienda.com', '${adminPassword}', 'admin')
+    const adminPassword = await bcrypt.hash(adminPlainPassword, 10);
+
+    await db.execute(sql`
+      INSERT INTO users (nombre, email, password, role)
+      VALUES ('Administrador', ${adminEmail}, ${adminPassword}, 'admin')
       ON CONFLICT (email) DO NOTHING;
     `);
 
+    // La contraseña no se devuelve: quien ejecuta el setup ya la conoce.
     return {
       message: 'Tablas creadas y usuario admin insertado exitosamente',
-      admin: {
-        email: 'admin@tienda.com',
-        password: 'Admin123!'
-      }
+      admin: { email: adminEmail },
     };
   }
 }
